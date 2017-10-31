@@ -62,13 +62,11 @@ public class Exercise1 {
         Arrays.sort(persons, new Comparator<Person>() {
             @Override
             public int compare(Person left, Person right) {
-                return left.getFirstName().compareTo(right.getFirstName());
-            }
-        });
-        Arrays.sort(persons, new Comparator<Person>() {
-            @Override
-            public int compare(Person left, Person right) {
-                return left.getLastName().compareTo(right.getLastName());
+                int compareByLastName = left.getLastName().compareTo(right.getLastName());
+                return compareByLastName == 0 ?
+                        left.getFirstName().compareTo(right.getFirstName()):
+                        compareByLastName;
+
             }
         });
 
@@ -84,14 +82,14 @@ public class Exercise1 {
     public void findFirstWithAge30UsingGuavaPredicate() {
         List<Person> persons = Arrays.asList(getPersons());
 
-        Predicate<Person> isFirstNameAlexChecker = new Predicate<Person>() {
+        Predicate<Person> is30YearsAgeChecker = new Predicate<Person>() {
             @Override
             public boolean apply(Person p) {
                 return 30 == p.getAge();
             }
         };
         Optional<Person> personOptional = FluentIterable.from(persons)
-                .firstMatch(isFirstNameAlexChecker);
+                .firstMatch(is30YearsAgeChecker);
 
         if (personOptional.isPresent())
             assertEquals(new Person("Николай", "Зимов", 30), personOptional.get());
