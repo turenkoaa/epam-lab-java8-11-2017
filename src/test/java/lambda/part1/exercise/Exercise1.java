@@ -40,11 +40,10 @@ public class Exercise1 {
     public void sortPersonsByAgeUsingArraysSortAnonymousComparator() {
         Person[] persons = getPersons();
 
-        // TODO использовать Arrays.sort
         Arrays.sort(persons, new Comparator<Person>() {
             @Override
-            public int compare(Person person, Person t1) {
-                return Integer.compare(person.getAge(), t1.getAge());
+            public int compare(Person left, Person right) {
+                return Integer.compare(left.getAge(), right.getAge());
             }
         });
 
@@ -62,14 +61,14 @@ public class Exercise1 {
 
         Arrays.sort(persons, new Comparator<Person>() {
             @Override
-            public int compare(Person person, Person t1) {
-                return person.getFirstName().compareTo(t1.getFirstName());
+            public int compare(Person left, Person right) {
+                return left.getFirstName().compareTo(right.getFirstName());
             }
         });
         Arrays.sort(persons, new Comparator<Person>() {
             @Override
-            public int compare(Person person, Person t1) {
-                return person.getLastName().compareTo(t1.getLastName());
+            public int compare(Person left, Person right) {
+                return left.getLastName().compareTo(right.getLastName());
             }
         });
 
