@@ -1,7 +1,6 @@
 package lambda.part3.exercise;
 
 import lambda.data.Employee;
-import lambda.data.Person;
 import lambda.part3.example.Example1;
 import org.junit.Test;
 
@@ -38,8 +37,9 @@ public class Exercise2 {
          * @param mapping Функция преобразования элементов.
          */
         public <R> MapHelper<R> map(Function<T, R> mapping) {
-            // TODO реализация
-            throw new UnsupportedOperationException();
+            List<R> newSource = new ArrayList<>();
+            for (T item:source) newSource.add(mapping.apply(item));
+            return new MapHelper<>(newSource);
         }
 
         /**
@@ -49,8 +49,9 @@ public class Exercise2 {
          * @param flatMapping Функция преобразования элементов.
          */
         public <R> MapHelper<R> flatMap(Function<T, List<R>> flatMapping) {
-            // TODO реализация
-            throw new UnsupportedOperationException();
+            List<R> newSource = new ArrayList<>();
+            for (T item:source) newSource.addAll(flatMapping.apply(item));
+            return new MapHelper<>(newSource);
         }
     }
 
