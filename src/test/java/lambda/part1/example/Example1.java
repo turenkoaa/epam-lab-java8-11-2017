@@ -64,8 +64,7 @@ public class Example1 {
 
         Person person = null;
         for (Person current : persons) {
-            // FIXME потенциальная ошибка
-            if (current.getFirstName().equals("Алексей")) {
+            if ("Алексей".equals(current.getFirstName())) {
                 person = current;
                 break;
             }
@@ -123,7 +122,7 @@ public class Example1 {
     public void createMapFromListUsingForeach() {
         List<Person> persons = Arrays.asList(getPersons());
 
-        Map<String, Person> personByLastName = new HashMap<>();
+        Map<String, Person> personByLastName = new HashMap<>(persons.size());
         for (Person person : persons) {
             personByLastName.put(person.getLastName(), person);
         }
