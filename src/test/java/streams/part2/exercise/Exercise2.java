@@ -1,12 +1,15 @@
 package streams.part2.exercise;
 
 import lambda.data.Employee;
+import lambda.data.JobHistoryEntry;
 import lambda.data.Person;
 import lambda.part3.example.Example1;
 import org.junit.Test;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -176,7 +179,12 @@ public class Exercise2 {
         List<Employee> employees = Example1.getEmployees();
 
         // TODO реализация
-        Map<String, Person> result = null;
+        Map<String, Person> result = employees.stream()
+                .map(e -> new Employee(e.getPerson(), e.getJobHistory()
+                .stream()
+                .collect(groupingBy(JobHistoryEntry::getEmployer), summingInt(JobHistoryEntry::getDuration)));
+
+
 
         Map<String, Person> expected = new HashMap<>();
         expected.put("EPAM", employees.get(4).getPerson());
