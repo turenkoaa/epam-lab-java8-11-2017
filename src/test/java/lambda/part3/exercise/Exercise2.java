@@ -60,7 +60,7 @@ public class Exercise2 {
     @Test
     public void mapEmployeesToLengthOfTheirFullNamesUsingMapHelper() {
         List<Employee> employees = Example1.getEmployees();
-
+      
         List<Integer> lengths = MapHelper.from(employees)
                 .map(Employee::getPerson)
                                  .map(person -> person.getFirstName() + ' ' + person.getLastName())
