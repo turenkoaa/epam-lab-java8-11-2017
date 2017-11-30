@@ -26,7 +26,7 @@ public class Exercise3 {
         }
 
         public static <T> LazyMapHelper<T, T> from(List<T> list) {
-            return new LazyMapHelper<>(list, listFrom -> listFrom);
+            return new LazyMapHelper<>(list, item -> item);
         }
 
         public List<R> force() {
