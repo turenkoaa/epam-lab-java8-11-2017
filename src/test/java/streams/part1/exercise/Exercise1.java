@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
@@ -65,7 +64,6 @@ public class Exercise1 {
                 .collect(Collectors.toList());
 
         assertEquals(Arrays.asList("EPAM", "google", "yandex", "mail.ru", "T-Systems"), companies);
-
     }
 
     @Test
