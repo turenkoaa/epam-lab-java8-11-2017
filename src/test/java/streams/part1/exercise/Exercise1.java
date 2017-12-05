@@ -57,7 +57,6 @@ public class Exercise1 {
     public void findAllCompanies() {
         List<Employee> employees = Example1.getEmployees();
 
-
         List<String> companies = employees.stream()
                 .flatMap(e -> e.getJobHistory().stream())
                 .map(JobHistoryEntry::getEmployer)
