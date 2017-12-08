@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -19,11 +18,10 @@ public class Exercise1 {
     public void mapEmployeesToLengthOfTheirFullNames() {
         List<Employee> employees = Example1.getEmployees();
 
-        Function<Employee, String> fullNameExtractor =
-                employee -> employee.getPerson().getFirstName() + ' ' + employee.getPerson().getLastName();
-        ToIntFunction<String> stringLengthExtractor = String::length;
+        Function<Employee, String> fullNameExtractor = e -> e.getPerson().getFullName();
+        Function<String, Integer> stringLengthExtractor = String::length;
 
-        Function<Employee, Integer> fullNameLengthExtractor = e -> stringLengthExtractor.applyAsInt(fullNameExtractor.apply(e));
+        Function<Employee, Integer> fullNameLengthExtractor = fullNameExtractor.andThen(stringLengthExtractor);
 
         List<Integer> lengths = employees.stream().map(fullNameLengthExtractor).collect(Collectors.toList());
 
