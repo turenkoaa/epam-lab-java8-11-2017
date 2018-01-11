@@ -1,6 +1,7 @@
 package streams.part2.exercise;
 
 import lambda.data.Employee;
+import lambda.data.JobHistoryEntry;
 import lambda.data.Person;
 import lambda.part3.example.Example1;
 import org.junit.Test;
@@ -77,7 +78,6 @@ public class Exercise2 {
     public void employersStuffList() {
         List<Employee> employees = Example1.getEmployees();
 
-        // TODO реализация
         Map<String, Set<Person>> result = employees
                 .stream()
                 .flatMap(e -> e.getJobHistory()
@@ -157,7 +157,6 @@ public class Exercise2 {
     public void indexByFirstEmployer() {
         List<Employee> employees = Example1.getEmployees();
 
-        // TODO реализация
         Map<String, Set<Person>> result = employees
                 .stream()
                 .map(e -> new PersonPositionPair(e.getPerson(), e.getJobHistory().get(0).getEmployer()))
@@ -177,14 +176,12 @@ public class Exercise2 {
         assertEquals(expected, result);
     }
 
-    private static class PersonDurationInCompanyTuple{
-        Person person;
-        String company;
-        Integer duration;
+    public class PersonDurationPair {
+        private final Person person;
+        private final int duration;
 
-        public PersonDurationInCompanyTuple(Person person, String company, Integer duration) {
+        public PersonDurationPair(Person person, int duration) {
             this.person = person;
-            this.company = company;
             this.duration = duration;
         }
 
@@ -192,11 +189,7 @@ public class Exercise2 {
             return person;
         }
 
-        public String getCompany() {
-            return company;
-        }
-
-        public Integer getDuration() {
+        public int getDuration() {
             return duration;
         }
     }
@@ -209,16 +202,18 @@ public class Exercise2 {
     public void greatestExperiencePerEmployer() {
         List<Employee> employees = Example1.getEmployees();
 
-        Map<String, Person> result = null;/*employees.stream()
-                .flatMap(e -> e.getJobHistory()
-                            .stream()
-                            .collect(toMap(JobHistoryEntry::getEmployer, JobHistoryEntry::getDuration, (d1, d2) -> d1 + d2))
-                                    .entrySet()
-                                    .stream()
-                            .map(es -> new PersonDurationInCompanyTuple(e.getPerson(), es.getKey(), es.getValue())))
-                .collect(toMap(PersonDurationInCompanyTuple::getCompany, PersonDurationInCompanyTuple::getDuration, (d1, d2) -> d1 > d2 ? d1 : d2))
-                .*/
-
+        Map<String, Person> result = employees.stream()
+                .flatMap(employee -> employee.getJobHistory()
+                        .stream()
+                        .collect(toMap(JobHistoryEntry::getEmployer,
+                                entry -> new PersonDurationPair(employee.getPerson(), entry.getDuration()),
+                                (pair1, pair2) -> new PersonDurationPair(pair1.getPerson(), pair1.getDuration() + pair2.getDuration()))
+                        ).entrySet()
+                        .stream())
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (pair1, pair2) -> pair1.getDuration() > pair2.getDuration() ? pair1 : pair2))
+                .entrySet()
+                .stream()
+                .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getPerson()));
 
         Map<String, Person> expected = new HashMap<>();
         expected.put("EPAM", employees.get(4).getPerson());
