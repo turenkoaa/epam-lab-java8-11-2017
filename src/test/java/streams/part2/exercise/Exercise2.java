@@ -194,6 +194,30 @@ public class Exercise2 {
         }
     }
 
+    public class PersonCompanyDuration {
+        private final Person person;
+        private final String company;
+        private final int duration;
+
+        public PersonCompanyDuration(Person person, String company, int duration) {
+            this.person = person;
+            this.company = company;
+            this.duration = duration;
+        }
+
+        public Person getPerson() {
+            return person;
+        }
+
+        public String getCompany() {
+            return company;
+        }
+
+        public int getDuration() {
+            return duration;
+        }
+    }
+
     /**
      * Преобразовать список сотрудников в отображение [компания -> сотрудник, суммарно проработавший в ней наибольшее время].
      * Гарантируется, что такой сотрудник будет один.
@@ -202,7 +226,8 @@ public class Exercise2 {
     public void greatestExperiencePerEmployer() {
         List<Employee> employees = Example1.getEmployees();
 
-        Map<String, Person> result = employees.stream()
+
+              /*  employees.stream()
                 .flatMap(employee -> employee.getJobHistory()
                         .stream()
                         .collect(toMap(JobHistoryEntry::getEmployer,
@@ -214,10 +239,22 @@ public class Exercise2 {
                 .entrySet()
                 .stream()
                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getPerson()));
+        */
+        Map<String, Person> result = employees.stream()
+                .flatMap(employee -> employee.getJobHistory()
+                        .stream()
+                        .collect(groupingBy(JobHistoryEntry::getEmployer, summingInt(JobHistoryEntry::getDuration)))
+                        .entrySet()
+                        .stream()
+                        .map(entry -> new PersonCompanyDuration(employee.getPerson(), entry.getKey(), entry.getValue())))
+                .collect(groupingBy(PersonCompanyDuration::getCompany,
+                        collectingAndThen(maxBy(Comparator.comparingInt(PersonCompanyDuration::getDuration)),
+                                entry -> entry.orElseThrow(IllegalStateException::new).getPerson())));
+
 
         Map<String, Person> expected = new HashMap<>();
         expected.put("EPAM", employees.get(4).getPerson());
-        expected.put("google", employees.get(1).getPerson());
+        expected.put("google", employees.get(0).getPerson());
         expected.put("yandex", employees.get(2).getPerson());
         expected.put("mail.ru", employees.get(2).getPerson());
         expected.put("T-Systems", employees.get(5).getPerson());
