@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({"ConstantConditions", "unused"})
@@ -37,7 +39,7 @@ public class Exercise1 {
                         .stream()
                         .anyMatch(jobHistoryEntry -> jobHistoryEntry.getPosition().equals("QA")))
                 .map(Employee::getPerson)
-                .collect(Collectors.toSet());
+                .collect(toSet());
 
         Set<Person> expected = new HashSet<>(Arrays.asList(
                 employees.get(2).getPerson(),
@@ -51,11 +53,16 @@ public class Exercise1 {
     public void composeFullNamesOfEmployeesUsingLineSeparatorAsDelimiter() {
         List<Employee> employees = Example1.getEmployees();
 
-        String result = employees.stream()
+        String result = /*employees.stream()
                 .map(Employee::getPerson)
                 .map(Person::getFullName)
                 .reduce((n1, n2) -> n1 + "\n" + n2)
-                .get();
+                .get();*/
+
+        employees.stream()
+                .map(Employee::getPerson)
+                .map(Person::getFullName)
+                .collect(Collectors.joining("\n"));
 
         String expected = "Иван Мельников\n"
                         + "Александр Дементьев\n"
@@ -100,8 +107,9 @@ public class Exercise1 {
     public void groupPersonsByFirstPositionUsingGroupingByCollector() {
         List<Employee> employees = Example1.getEmployees();
 
-        // TODO реализация
-        Map<String, Set<Person>> result = null;
+        Map<String, Set<Person>> result = employees.stream()
+                .collect(Collectors.groupingBy(e -> e.getJobHistory().get(0).getPosition(),
+                        mapping(Employee::getPerson, toSet())));
 
         Map<String, Set<Person>> expected = new HashMap<>();
         expected.put("dev", Collections.singleton(employees.get(0).getPerson()));
